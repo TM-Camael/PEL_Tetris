@@ -149,7 +149,6 @@ void affiche_tetris(Tetris& tetris){
   if(not tetris.game_over){
     affiche_tetramino(tetris,tetris.prochain_tetramino);
     affiche_tetramino(tetris,tetris.tetramino_courant);
-    deplace_tetramino(tetris.tetramino_courant, 0,-1);
   }
   // Rafraichi la fenêtre
   rafraichissement();
@@ -173,7 +172,13 @@ Tetramino deplace_tetramino(Tetramino& t,int mx,int my){
 bool evenement_chute(Tetris& tetris){
   
   //========= Exercice 9 =========
- 
+  Tetramino temp = tetris.tetramino_courant;
+  deplace_tetramino(temp, 0, -1);
+  if(teste_tetramino(tetris, temp)){
+    tetris.tetramino_courant = temp;
+    return true;
+  } 
+  else return false;
   //==============================
   
 }
