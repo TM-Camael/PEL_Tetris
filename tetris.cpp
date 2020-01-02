@@ -26,7 +26,7 @@ void affiche_carre(Tetris &tetris, int x, int y, int c)
 void ecrire_position(Puits &puits, int x, int y, int v)
 {
 	assert(0 <= x and x < puits.largeur and 0 <= y and y < puits.hauteur and 0 <= v and v <= 7);
-	puits.grille[x * y * puits.largeur] = v;
+	puits.grille[x + y * puits.largeur] = v;
 }
 
 // Initialisation du tetris
@@ -74,10 +74,10 @@ void affiche_tetramino(Tetris &tetris, Tetramino &t)
 	y1 = y + t.y1;
 	y2 = y + t.y2;
 	y3 = y + t.y3;
-	affiche_carre(tetris, x, y, 1);
-	affiche_carre(tetris, x1, y1, 1);
-	affiche_carre(tetris, x2, y2, 1);
-	affiche_carre(tetris, x3, y3, 1);
+	affiche_carre(tetris, x, y, t.forme);
+	affiche_carre(tetris, x1, y1, t.forme);
+	affiche_carre(tetris, x2, y2, t.forme);
+	affiche_carre(tetris, x3, y3, t.forme);
 	//==============================
 }
 
@@ -134,6 +134,18 @@ void affiche_tetris(Tetris &tetris)
 	//==============================
 
 	//======== Exercice 12 =========
+	for (int i = 0; i < hp; i++)
+	{
+		for (int j = 0; j < lp; j++)
+		{
+			cout<<i<<endl;
+			cout<<j<<endl;
+			if (lire_position(tetris.puits,j,i)!=0)
+			{
+				affiche_carre(tetris, j, i, lire_position(tetris.puits,j,i));
+			}
+		}
+	}
 
 	//==============================
 
@@ -250,7 +262,7 @@ void initialisation_tetramino(Tetramino &t, int f)
 		t.x1 = -1;
 		t.y1 = 0;
 		t.x2 = -1;
-		t.y2 = -1;
+		t.y2 = 1;
 		t.x3 = 0;
 		t.y3 = 1;
 	}
@@ -381,19 +393,20 @@ Tetramino tourne_tetramino(Tetramino &t)
 		temp.x3 = t.x3 * cosval - t.y3 * sinval;
 		temp.y3 = t.y3 * cosval + t.x3 * sinval;
 	}
-	else if (temp.forme ==1)
+	else if (temp.forme == 1)
 	{
-		if(temp.rotation==0 or temp.rotation==2){
+		if (temp.rotation == 0 or temp.rotation == 2)
+		{
 			temp.x1 == 0;
 			temp.y1 == -1;
 			temp.x2 == 0;
 			temp.y2 == 1;
 			temp.x3 == 0;
-			temp.y3 ==2;
+			temp.y3 == 2;
 		}
-		else initialisation_tetramino(temp,temp.forme);
+		else
+			initialisation_tetramino(temp, temp.forme);
 	}
-	
 
 	return temp;
 	//===============================
@@ -416,18 +429,38 @@ void verouillage_tetramino(Tetris &tetris)
 	y2 = y + t.y2;
 	y3 = y + t.y3;
 
-	//========= Exercice 11 =========
-
-	//===============================
-
 	//========= Exercice 12 =========
+	ecrire_position(tetris.puits,x,y,t.forme);
+	ecrire_position(tetris.puits,x1,y1,t.forme);
+	ecrire_position(tetris.puits,x2,y2,t.forme);
+	ecrire_position(tetris.puits,x3,y3,t.forme);
 
 	//===============================
 
 	// Plus petite ordonnée d'un carré du tetramino courant
-	int ymin;
+	int ymin=INT32_MAX;
 
 	//========= Exercice 13 =========
+	if(y<ymin){
+		ymin=y;
+	}
+	if (y1<ymin)
+	{
+		ymin=y1;
+	}
+	if (y2<ymin){
+		ymin=y2;
+	}
+	if (y3<ymin){
+		ymin=y3;
+	}
+
+	if (ymin>=tetris.ligne_vie){
+		tetris.game_over=true;
+	}
+	else nouveau_tetramino(tetris);
+
+	
 
 	//===============================
 
