@@ -138,11 +138,9 @@ void affiche_tetris(Tetris &tetris)
 	{
 		for (int j = 0; j < lp; j++)
 		{
-			cout<<i<<endl;
-			cout<<j<<endl;
-			if (lire_position(tetris.puits,j,i)!=0)
+			if (lire_position(tetris.puits, j, i) != 0)
 			{
-				affiche_carre(tetris, j, i, lire_position(tetris.puits,j,i));
+				affiche_carre(tetris, j, i, lire_position(tetris.puits, j, i));
 			}
 		}
 	}
@@ -430,43 +428,111 @@ void verouillage_tetramino(Tetris &tetris)
 	y3 = y + t.y3;
 
 	//========= Exercice 12 =========
-	ecrire_position(tetris.puits,x,y,t.forme);
-	ecrire_position(tetris.puits,x1,y1,t.forme);
-	ecrire_position(tetris.puits,x2,y2,t.forme);
-	ecrire_position(tetris.puits,x3,y3,t.forme);
+	ecrire_position(tetris.puits, x, y, t.forme);
+	ecrire_position(tetris.puits, x1, y1, t.forme);
+	ecrire_position(tetris.puits, x2, y2, t.forme);
+	ecrire_position(tetris.puits, x3, y3, t.forme);
 
 	//===============================
 
 	// Plus petite ordonnée d'un carré du tetramino courant
-	int ymin=INT32_MAX;
+	int ymin = INT32_MAX;
 
 	//========= Exercice 13 =========
-	if(y<ymin){
-		ymin=y;
-	}
-	if (y1<ymin)
+	if (y < ymin)
 	{
-		ymin=y1;
+		ymin = y;
 	}
-	if (y2<ymin){
-		ymin=y2;
+	if (y1 < ymin)
+	{
+		ymin = y1;
 	}
-	if (y3<ymin){
-		ymin=y3;
+	if (y2 < ymin)
+	{
+		ymin = y2;
+	}
+	if (y3 < ymin)
+	{
+		ymin = y3;
 	}
 
-	if (ymin>=tetris.ligne_vie){
-		tetris.game_over=true;
+	if (ymin >= tetris.ligne_vie)
+	{
+		tetris.game_over = true;
 	}
-	else nouveau_tetramino(tetris);
-
-	
+	else
+		nouveau_tetramino(tetris);
 
 	//===============================
-
-	int nombre_lignes_finies = 0;
 
 	//========= Exercice 14 =========
 
+	int nombre_lignes_finies = 0;
+	bool ligne_finie = true;
+	bool test = true; //Sert à revérifier le puits si une ligne a été supprimée, utile dans le cas où plusieurs lignes doivent être supprimées
+
+	while(test){
+		test = false;
+		for (int i = 0; i < tetris.puits.hauteur; i++)
+		{
+			for (int j = 0; j < tetris.puits.largeur; j++)
+			{
+				if (lire_position(tetris.puits, j, i) == 0)
+				{
+					ligne_finie = false;
+					break;
+				}
+				ligne_finie = true;
+			}
+			if (ligne_finie)
+			{
+				nombre_lignes_finies++;
+				for (int k = i; k < tetris.puits.hauteur-1; k++)
+				{
+					for (int l = 0; l < tetris.puits.largeur; l++)
+					{
+						ecrire_position(tetris.puits,l,k,lire_position(tetris.puits,l,k+1));
+						ecrire_position(tetris.puits,l,k+1,0);
+					}
+				}
+				test = true;
+			}
+		}
+	}
+
+	//========= Exercice 15 =========
+
+	int multiple;
+	int ajout_score = 0;
+
+	switch (nombre_lignes_finies) {
+		case 0:
+			multiple=0;
+			break;
+		case 1:
+			multiple=100;
+			break;
+		case 2:
+			multiple=300;
+			break;
+		case 3:
+			multiple=500;
+			break;
+		case 4:
+			multiple=800;
+			break;
+	}
+
+	tetris.lignes_terminees += nombre_lignes_finies;
+	if(tetris.lignes_terminees>=tetris.niveau*10){
+		if(tetris.niveau < 20){
+			tetris.niveau++;
+		}
+	}
+
+	ajout_score = (tetris.niveau+ymin) * multiple;
+	tetris.score += ajout_score; 
 	//===============================
 }
+
+//===============================
