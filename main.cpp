@@ -6,7 +6,7 @@ int main(){
   srand (time(NULL));
   
   // Creation d'une interface graphique de 450x580
-  initialise_interface(430,580);
+  initialise_interface(450,580);
 
   // Creation et initialisation du jeu
   Tetris tetris;
@@ -139,7 +139,7 @@ int main(){
       }
       
       // On attent 20ms avant de recommencer la boucle
-      SDL_Delay(20);
+      SDL_Delay(100);
     }
     else{
       // On attent 10ms avant de recommencer la boucle si game_over

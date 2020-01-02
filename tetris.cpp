@@ -25,7 +25,7 @@ void affiche_carre(Tetris& tetris,int x,int y,int c){
 // Ecrit la valeur v dans la case (x,y) de la grille du puits
 void ecrire_position(Puits& puits,int x,int y,int v){
   assert(0<=x and x<puits.largeur and 0<=y and y<puits.hauteur and 0<=v and v<=7);
-  puits.grille[x+y*puits.largeur]=v;
+  puits.grille[x*y*puits.largeur]=v;
 }
 
 // Initialisation du tetris
@@ -113,10 +113,11 @@ void affiche_tetris(Tetris& tetris){
   
   //========= Exercice 1 =========
   
-  dessine_ligne(0,0,0,hp*tc); // ligne à gauche
-  dessine_ligne(lp*tc,0,lp*tc,hp*tc); // ligne à droite
+  dessine_ligne(dx+0,dy+0,dx+0,dy+hp*tc); // ligne à gauche
+  dessine_ligne(dx+lp*tc,dy+0,dx+lp*tc,dy+hp*tc); // ligne à droite
+  dessine_ligne(dx+0,dy+0,dx+lp*tc,dy+0); //ligne du bas
   defini_couleur_dessin(gris);
-  dessine_ligne(0,lv*tc,lp*tc,lv*tc);
+  dessine_ligne(dx+0,dy+lv*tc,dx+lp*tc,dy+lv*tc); //ligne de vie
   defini_couleur_dessin(blanc);
   //==============================
 
@@ -183,6 +184,11 @@ bool evenement_chute(Tetris& tetris){
 void evenement_deplacement(Tetris& tetris,int direction){
 
   //========= Exercice 8 =========
+  Tetramino temp = tetris.tetramino_courant;
+  deplace_tetramino(temp, direction, 0);
+  if(teste_tetramino(tetris, temp)){
+    tetris.tetramino_courant = temp;
+  }
  
   //==============================
 
@@ -283,8 +289,6 @@ void nouveau_tetramino(Tetris& tetris){
   tetris.prochain_tetramino.x = (int)(280/tetris.taille_carre);
   tetris.prochain_tetramino.y = (int)(190/tetris.taille_carre);
   initialisation_tetramino(tetris.prochain_tetramino, tetris.prochain_tetramino.forme);
-  cout<<tetris.tetramino_courant.forme<<endl;
-  cout<<tetris.prochain_tetramino.forme<<endl;
 
   //==============================
   
@@ -296,6 +300,10 @@ void nouveau_tetramino(Tetris& tetris){
 bool teste_position(Tetris& tetris,int x,int y){
 
   //========= Exercice 6 =========
+  if(0<=x and x<tetris.puits.largeur and 0<=y and y<tetris.puits.hauteur and tetris.puits.grille[x+y*tetris.puits.largeur]==0){
+    return true;
+  }
+  else return false;
  
   //==============================
 
@@ -306,18 +314,9 @@ bool teste_position(Tetris& tetris,int x,int y){
 // Teste tetramino
 //*****************
 bool teste_tetramino(Tetris& tetris,Tetramino& t){
-  int x,y,x1,y1,x2,y2,x3,y3;
-  x=t.x;
-  x1=x+t.x1;
-  x2=x+t.x2;
-  x3=x+t.x3;
-  y=t.y;
-  y1=y+t.y1;
-  y2=y+t.y2;
-  y3=y+t.y3;
   
   //========= Exercice 7 =========
- 
+  return teste_position(tetris, t.x,t.y) and  teste_position(tetris, t.x1,t.y1) and  teste_position(tetris, t.x2,t.y2) and  teste_position(tetris, t.x3,t.y3);
   //==============================
 
 }
