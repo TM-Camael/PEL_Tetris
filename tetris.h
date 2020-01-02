@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include "interface.h"
+#include "math.h"
 
 //**************
 //* Structures *
