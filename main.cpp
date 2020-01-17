@@ -118,8 +118,6 @@ int main()
 				}
 			}
 		}
-		// Declenchement evenement automatique
-
 		if (not tetris.game_over)
 		{
 			if (chute_effectuee)
@@ -133,8 +131,6 @@ int main()
 				else
 				{
 					++nombre_boucles;
-					chute_effectuee = evenement_chute(tetris);
-
 				}
 			}
 			else
@@ -160,7 +156,7 @@ int main()
 			}
 
 			// On attent 20ms avant de recommencer la boucle
-			SDL_Delay(100);
+			SDL_Delay(20);
 		}
 		else
 		{
